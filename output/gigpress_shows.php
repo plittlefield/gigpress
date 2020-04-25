@@ -463,6 +463,12 @@ function gigpress_json_ld( $showdata ) {
 	// Start array for single event
 	$show_markup = array( "@context" => "http://schema.org", "@type" => "Event" );
 
+        // Extra attributes for Google Events
+        $show_markup['eventAttendanceMode'] = "https://schema.org/OfflineEventAttendanceMode";
+        $endDate = date_create($showdata['iso_date']);
+        date_add($endDate,date_interval_create_from_date_string("3 hours"));
+        $show_markup['endDate'] = date_format($endDate,"c");
+
 	// Add show level attributes
 	$show_markup['name']      = ( ! empty( $showdata['tour'] ) ) ? $showdata['tour'] : $showdata['artist_plain'];
 	$show_markup['startDate'] = $showdata['iso_date'];
@@ -554,6 +560,9 @@ function gigpress_json_ld( $showdata ) {
 	if ( count( $offer_markup ) > 1 ) {
 		$show_markup['offers'] = $offer_markup;
 	}
+
+	// Create blank 'image' attribute for Google Events
+        $show_markup['image'] = $image_markup;
 
 	/**
 	 * Provides an opportunity to customize and alter the JSON LD output for
